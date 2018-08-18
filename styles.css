@@ -1,0 +1,126 @@
+/* Collapsibles Styling */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 20px;
+}
+
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.collapsible:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+/* Tooltips styling */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /*border-bottom: 1px dotted black;*/
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    /*top: -5px;*/
+    left: 105%;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%; /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+#player_total_level:before {
+    content: url('./assets/stats/Overall-icon.png');
+    padding: 5px;
+}
+
+.player_skill_container {
+    display: block;
+    height: 22px;
+    padding: 2px;
+    with: 100%;
+}
+
+.skill_icon {
+    width: 22px;
+    height: 22px;
+}
+
+.player_skill {
+    height: 22px;
+    width: 26px;
+    font-size: 22px;
+    line-height: 22px;
+    text-align: center;
+}
+
+.player_skill .tooltiptext {
+    font-size: 16px;
+    height: 16px;
+    line-height: 16px;
+}
+
+.content {
+    padding: 5px;
+}
+
+.data_container {
+    margin-bottom: 5px;
+    max-width: 800px;
+}
+
+.player_skill_container:nth-child(even) {
+    background-color: rgb(225, 225, 225);
+}
+
+.npc_kill, .player_count {
+    padding: 5px;
+}
+
+.npc_kill:nth-child(even), .player_count:nth-child(even) {
+    background-color: rgb(225, 225, 225);
+}
+
