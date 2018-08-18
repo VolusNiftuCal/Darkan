@@ -1,32 +1,32 @@
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 25px;
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 25px;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapsible:hover {
-  background-color: #ccc;
+    background-color: #ccc;
 }
 
 /* Style the collapsible content. Note: hidden by default */
 .content {
-  padding: 0 18px;
-  display: none;
-  overflow: hidden;
-  background-color: #f1f1f1;
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }
 
 .collapsible:after {
     content: '\02795'; /* Unicode character for "plus" sign (+) */
-    font-size: 13px;
+    font-size: 25px;
     color: white;
     float: right;
     margin-left: 5px;
@@ -53,12 +53,12 @@
 }
 
 .player_skill, .player_xp {
-  width: 300px;
-  text-align: center;
-  font-size: 22px;
-  line-height: 22px;
-  height: 22px;
-  display: inline-block;
+    width: 300px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 22px;
+    height: 22px;
+    display: inline-block;
 }
 
 .player_skill_icon {
@@ -76,11 +76,14 @@
     max-width: 800px;
 }
 
-.npc_kill, .player_count {
+.player_data_cont {
     padding: 5px;
 }
 
-.npc_kill:nth-child(even), .player_count:nth-child(even), .player_skill_container:nth-child(even) {
+.player_skill_container:nth-child(even), .player_data_cont:nth-child(even) {
     background-color: rgb(225, 225, 225);
 }
 
+.player_data_key:after {
+    content: ': ';
+}

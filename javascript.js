@@ -90,7 +90,7 @@ function Display(data) {
     // General Information
     var player_info_container = newElement('div', { id:'player_info', className: 'data_container'});
     // Container for player title + player name
-    var player_name_cont = newElement('button', { className: 'collapsible'});
+    var player_name_cont = newElement('button', { className:'collapsible'});
     // Name
     var player_name = newElement('span', {id:'player_name'});
     player_name.textContent = data.player;
@@ -151,8 +151,10 @@ function Display(data) {
     }
 
     // Kills
-    var player_npcKills_container = newElement('div', { id:'player_npcKills', className: 'data_container'});
-    var player_count_container = newElement('div', { id:'player_count', className: 'data_container'});
+    var player_npcKills_container = assembleData(data.npcKills, 'NPC Kills');
+
+    // Count
+    var player_count_container = assembleData(data.count, 'Count');
 
     // Clear the container and append everything
     clearChildren(data.container);
@@ -204,3 +206,29 @@ function addCollapsibles() {
 
     console.log('Collapsibles added.');
 }
+
+function assembleData(dataList, title) {
+        var player_data_main_container = newElement('div', { className:'data_container'});
+        var player_data_title = newElement('button', { className:'collapsible'});
+        player_data_title.textContent = title;
+        player_data_main_container.appendChild(player_data_title);
+
+        player_data_content = newElement('div', { className:'content'});
+        player_data_main_container.appendChild(player_data_content);
+
+        for (data in dataList) {
+            player_data_container = newElement('div', { className:'player_data_cont'});
+
+            player_data_key = newElement('span', { className:'player_data_key'});
+            player_data_key.textContent = data;
+            player_data_container.appendChild(player_data_key);
+
+            player_data_value = newElement('span', { className:'player_data_value'});
+            player_data_value.textContent = dataList[data];
+            player_data_container.appendChild(player_data_value);
+
+            player_data_content.appendChild(player_data_container);
+        }
+        
+        return player_data_main_container;
+    }
