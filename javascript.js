@@ -1,10 +1,14 @@
-
+pdata = undefined;
+function getData() {
+    var name = document.getElementById('username').value;
+    pdata = new PlayerData(name, document.getElementById('player_data'));
+}
 
 function PlayerData(player, container) {
     this.container = container;
     this.api = 'http://darkan.org:5556/api/player/';
-    this.name = player;
-    this.url = this.api + this.name;
+    this.player = player;
+    this.url = this.api + this.player;
     
     // Timer that checks if all data is loaded
     this.isReadyTimer = undefined;
@@ -51,7 +55,7 @@ function PlayerData(player, container) {
                             if (npcKills !== undefined && count !== undefined) {
                                 clearInterval(pd.isReadyTimer);
                                 console.log('...ready!');
-                                pd.display = new Display({name:pd.player, container:pd.container, info:info, npcKills:npcKills, count:count});
+                                pd.display = new Display({player:pd.player, container:pd.container, info:info, npcKills:npcKills, count:count});
                             } else {
                                 console.log('Waiting...');
                             }
@@ -82,19 +86,84 @@ function PlayerData(player, container) {
 function Display(data) {
     this.data = data;
     
-    var player_info_container = newElement('div', { id:'player_info', className: 'data_container'});
-    var player_name = newElement('button', {id:'player_name', className: 'collapsible'});
-    player_info_container.appendChild(player_name);
 
-    data.container.appendChild(player_info_container);
-    
-    
+    // General Information
+    var player_info_container = newElement('div', { id:'player_info', className: 'data_container'});
+    // Container for player title + player name
+    var player_name_cont = newElement('button', { className: 'collapsible'});
+    // Name
+    var player_name = newElement('span', {id:'player_name'});
+    player_name.textContent = data.player;
+
+    // Title
+    var player_title = newElement('span', {id:'player_title'});
+    if (data.info.title) {
+        // Remove tags
+        player_title.textContent = data.info.title.replace(/(<([^>]+)>)/ig, '') + ' ';
+        // Adds color
+        if (data.info.title.indexOf('<col') !== -1) {
+            player_title.style.color = '#' + data.info.title.substring(5, 11);
+        }
+        // Adds shadow
+        if (data.info.title.indexOf('<sha') !== -1) {
+            player_title.style.textShadow = '0.016em 0px 0px #' + data.info.title.substring(18, 24);
+        }
+    }
+    player_name_cont.appendChild(player_title);
+    player_name_cont.appendChild(player_name);
+    player_info_container.appendChild(player_name_cont);
+
+    player_info_content = newElement('div', {className:'content'});
+    player_info_container.appendChild(player_info_content);
+
+    // Stats
+    // Total Level
+    player_total_cont = newElement('div', {className:'player_skill_container'});
+    // Icon
+    player_total_icon = newElement('img', {className:'player_skill_icon'});
+    player_total_icon.src = './assets/stats/Overall-icon.png';
+    player_total_cont.appendChild(player_total_icon);
+    // Level
+    player_total_level = newElement('div', {className:'player_skill'});
+    player_total_level.textContent = formatNumber(data.info.stats.totalLevel);
+    player_total_cont.appendChild(player_total_level);
+    // XP
+    player_total_xp = newElement('div', {className:'player_xp'});
+    player_total_xp.textContent = formatNumber(data.info.stats.totalXp);
+    player_total_cont.appendChild(player_total_xp);
+    // Append
+    player_info_content.appendChild(player_total_cont);
+
+    // Skills
+    skillList = [ 'Attack', 'Defence', 'Strength', 'Hitpoints', 'Ranged', 'Prayer', 'Magic', 'Cooking', 'Woodcutting', 'Fletching', 'Fishing', 'Firemaking', 'Crafting', 'Smithing', 'Mining', 'Herblore', 'Agility', 'Thieving', 'Slayer', 'Farming', 'Runecrafting', 'Hunter', 'Construction', 'Summoning', 'Dungeoneering'];
+    for (i = 0; i < data.info.stats.skills.length; i++) {
+        var player_skill_cont = newElement('div', {className:'player_skill_container'});
+        var player_skill_icon = newElement('img', {className:'player_skill_icon'});
+        player_skill_icon.src = './assets/stats/' +skillList[i]+ '-icon.png';
+        player_skill_cont.appendChild(player_skill_icon);
+        player_skill_level = newElement('div', {className:'player_skill'});
+        player_skill_level.textContent = formatNumber(data.info.stats.skills[i].level);
+        player_skill_cont.appendChild(player_skill_level);
+        player_skill_xp = newElement('div', {className:'player_xp'});
+        player_skill_xp.textContent = formatNumber(data.info.stats.skills[i].xp);
+        player_skill_cont.appendChild(player_skill_xp);
+        player_info_content.appendChild(player_skill_cont);
+    }
+
+    // Kills
     var player_npcKills_container = newElement('div', { id:'player_npcKills', className: 'data_container'});
     var player_count_container = newElement('div', { id:'player_count', className: 'data_container'});
+
+    // Clear the container and append everything
+    clearChildren(data.container);
+    data.container.appendChild(player_info_container);
+    data.container.appendChild(player_npcKills_container);
+    data.container.appendChild(player_count_container);
+    addCollapsibles();
 }
 
 
-// Removes chidlren from node
+// Removes all children from node
 function clearChildren(node) {
     while (node.firstChild) {
         node.removeChild(node.firstChild);
@@ -107,4 +176,31 @@ function newElement(element, args={}) {
     if (args.id) { elem.id = args.id };
     if (args.className) { elem.className = args.className };
     return elem;
+}
+
+/* Format the number to make it easier to read
+    ex: 1000 >= 1.000
+        1000000 >= 1.000.000
+*/
+function formatNumber(n) {
+    return n.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+function addCollapsibles() {
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+
+    console.log('Collapsibles added.');
 }
