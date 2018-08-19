@@ -1,6 +1,10 @@
 pdata = undefined;
 function getData() {
-    var name = document.getElementById('username').value;
+    var name = document.getElementById('username').value.toLowerCase().split(' ');
+    for (var i = 0; i < name.length; i++) {
+        name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
+    }
+    name = name.join('_');
     pdata = new PlayerData(name, document.getElementById('player_data'));
 }
 
@@ -29,6 +33,7 @@ function PlayerData(player, container) {
             if (response.status !== 200) {
                 pd.loadingError(response.status);
             } else {
+                console.log(response.status);
                 info = undefined;
                 npcKills = undefined;
                 count = undefined;
@@ -52,13 +57,18 @@ function PlayerData(player, container) {
                         
                     pd.isReadyTimer = setInterval(
                         function() {
+                            var tries = 0;
                             if (npcKills !== undefined && count !== undefined) {
                                 clearInterval(pd.isReadyTimer);
                                 console.log('...ready!');
                                 pd.display = new Display({player:pd.player, container:pd.container, info:info, npcKills:npcKills, count:count});
+                            } else if (tries >= 600) {
+                                clearInterval(pd.isReadyTimer);
+                                pd.loadingError('Took too long to retrieve information.');
                             } else {
                                 console.log('Waiting...');
                             }
+                            tries++;
                         }, 100);
                });
             }
@@ -75,7 +85,7 @@ function PlayerData(player, container) {
         } else {
             message = 'Something went wrong while retrieving player data. Status Code: ' + status;
         }
-        var errorMessage = newElement('span', { id:'error_message'});
+        var errorMessage = newElement('div', { id:'error_message'});
         errorMessage.textContent = message;
         clearChildren(container);
         container.appendChild(errorMessage);
@@ -93,7 +103,7 @@ function Display(data) {
     var player_name_cont = newElement('button', { className:'collapsible'});
     // Name
     var player_name = newElement('span', {id:'player_name'});
-    player_name.textContent = data.player;
+    player_name.textContent = data.player.replace('_', ' ');
 
     // Title
     var player_title = newElement('span', {id:'player_title'});
@@ -136,7 +146,7 @@ function Display(data) {
 
     // Skills
     skillList = [ 'Attack', 'Defence', 'Strength', 'Hitpoints', 'Ranged', 'Prayer', 'Magic', 'Cooking', 'Woodcutting', 'Fletching', 'Fishing', 'Firemaking', 'Crafting', 'Smithing', 'Mining', 'Herblore', 'Agility', 'Thieving', 'Slayer', 'Farming', 'Runecrafting', 'Hunter', 'Construction', 'Summoning', 'Dungeoneering'];
-    for (i = 0; i < data.info.stats.skills.length; i++) {
+    for (var i = 0; i < data.info.stats.skills.length; i++) {
         var player_skill_cont = newElement('div', {className:'player_skill_container'});
         var player_skill_icon = newElement('div', {className:'player_skill_icon'});
         player_skill_icon.style.backgroundImage = 'url(./assets/stats/' +skillList[i]+ '-icon.png)';
@@ -192,7 +202,7 @@ function addCollapsibles() {
     var coll = document.getElementsByClassName("collapsible");
     var i;
 
-    for (i = 0; i < coll.length; i++) {
+    for (var i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
