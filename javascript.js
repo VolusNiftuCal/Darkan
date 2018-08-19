@@ -50,17 +50,16 @@ function PlayerData(player, container) {
                                 console.log('Count successfully retrieved');
                             });
                         });
-                        
+                    tries = 0;    
                     pd.isReadyTimer = setInterval(
                         function() {
-                            var tries = 0;
                             if (npcKills !== undefined && count !== undefined) {
                                 clearInterval(pd.isReadyTimer);
                                 console.log('...ready!');
                                 pd.display = new Display({player:pd.player, container:pd.container, info:info, npcKills:npcKills, count:count});
-                            } else if (tries >= 600) {
+                            } else if (tries >= 200) {
                                 clearInterval(pd.isReadyTimer);
-                                pd.loadingError('Took too long to retrieve information.');
+                                pd.loadingError(999);
                             } else {
                                 console.log('Waiting...');
                             }
@@ -78,6 +77,9 @@ function PlayerData(player, container) {
         var message = 'Something went wrong. ¯\\_(?)_/¯';
         if (status === 404) {
             message = 'Player not found.';
+        } else 
+        if (status === 999) {
+            message = 'Took too long to retrieve information. Please try again.'
         } else {
             message = 'Something went wrong while retrieving player data. Status Code: ' + status;
         }
