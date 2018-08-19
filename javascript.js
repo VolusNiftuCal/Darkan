@@ -1,10 +1,6 @@
 pdata = undefined;
 function getData() {
-    var name = document.getElementById('username').value.toLowerCase().split(' ');
-    for (var i = 0; i < name.length; i++) {
-        name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
-    }
-    name = name.join('_');
+    var name = document.getElementById('username').value.toLowerCase().replace(' ', '_');
     pdata = new PlayerData(name, document.getElementById('player_data'));
 }
 
@@ -103,7 +99,7 @@ function Display(data) {
     var player_name_cont = newElement('button', { className:'collapsible'});
     // Name
     var player_name = newElement('span', {id:'player_name'});
-    player_name.textContent = data.player.replace('_', ' ');
+    player_name.textContent = formatName(data.player);
 
     // Title
     var player_title = newElement('span', {id:'player_title'});
@@ -196,6 +192,15 @@ function newElement(element, args={}) {
 */
 function formatNumber(n) {
     return n.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+function formatName(n) {
+    n = n.split('_');
+    for (var i = 0; i < n.length; i++) {
+        n[i] = n[i].charAt(0).toUpperCase() + n[i].substring(1);
+    }
+    n = n.join(' ');
+    return n;
 }
 
 function addCollapsibles() {
