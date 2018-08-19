@@ -165,6 +165,7 @@ function Display(data) {
     var player_count_container = assembleData(data.count, 'Count');
 
     // Clear the container and append everything
+    document.title = 'Darkan Achievments - ' + formatName(data.player);
     clearChildren(data.container);
     data.container.appendChild(player_info_container);
     data.container.appendChild(player_npcKills_container);
