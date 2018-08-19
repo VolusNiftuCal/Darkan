@@ -49,22 +49,25 @@
     display: block;
     height: 22px;
     padding: 2px;
-    with: 100%;
+    width: 100%;
 }
 
 .player_skill, .player_xp {
     width: 300px;
     text-align: center;
     font-size: 22px;
-    line-height: 22px;
     height: 22px;
     display: inline-block;
+    vertical-align: top;
 }
 
 .player_skill_icon {
     display: inline-block;
     width: 22px;
     height: 22px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .content {

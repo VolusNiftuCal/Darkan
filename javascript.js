@@ -138,8 +138,8 @@ function Display(data) {
     skillList = [ 'Attack', 'Defence', 'Strength', 'Hitpoints', 'Ranged', 'Prayer', 'Magic', 'Cooking', 'Woodcutting', 'Fletching', 'Fishing', 'Firemaking', 'Crafting', 'Smithing', 'Mining', 'Herblore', 'Agility', 'Thieving', 'Slayer', 'Farming', 'Runecrafting', 'Hunter', 'Construction', 'Summoning', 'Dungeoneering'];
     for (i = 0; i < data.info.stats.skills.length; i++) {
         var player_skill_cont = newElement('div', {className:'player_skill_container'});
-        var player_skill_icon = newElement('img', {className:'player_skill_icon'});
-        player_skill_icon.src = './assets/stats/' +skillList[i]+ '-icon.png';
+        var player_skill_icon = newElement('div', {className:'player_skill_icon'});
+        player_skill_icon.style.backgroundImage = 'url(./assets/stats/' +skillList[i]+ '-icon.png)';
         player_skill_cont.appendChild(player_skill_icon);
         player_skill_level = newElement('div', {className:'player_skill'});
         player_skill_level.textContent = formatNumber(data.info.stats.skills[i].level);
@@ -232,3 +232,4 @@ function assembleData(dataList, title) {
         
         return player_data_main_container;
     }
+    
