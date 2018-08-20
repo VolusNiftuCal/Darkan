@@ -4,6 +4,10 @@ function getData() {
     pdata = new PlayerData(name, document.getElementById('player_data'));
 }
 
+function refreshData() {
+    pdata = new PlayerData(pdata.player, document.getElementById('player_data'));
+}
+
 function PlayerData(player, container) {
     this.container = container;
     this.api = 'http://darkan.org:5556/api/player/';
@@ -50,7 +54,7 @@ function PlayerData(player, container) {
                                 console.log('Count successfully retrieved');
                             });
                         });
-                    tries = 0;    
+                    var tries = 0;    
                     pd.isReadyTimer = setInterval(
                         function() {
                             if (npcKills !== undefined && count !== undefined) {
@@ -164,9 +168,18 @@ function Display(data) {
     // Count
     var player_count_container = assembleData(data.count, 'Count');
 
-    // Clear the container and append everything
+    // Adding the player's name to the title
     document.title = 'Darkan Achievments - ' + formatName(data.player);
+    // Clearing the container
     clearChildren(data.container);
+
+    // Refresh data button
+    var refresh_button = newElement('button', {id:'refresh_button'});
+    refresh_button.textContent = 'Refresh Data';
+    refresh_button.onclick = function() { refreshData() };
+    data.container.appendChild(refresh_button);
+
+    // Displaying the data
     data.container.appendChild(player_info_container);
     data.container.appendChild(player_npcKills_container);
     data.container.appendChild(player_count_container);
