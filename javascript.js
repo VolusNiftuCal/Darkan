@@ -1,4 +1,5 @@
 pdata = undefined;
+
 function getData() {
     var name = document.getElementById('username').value.toLowerCase().replace(' ', '_');
     pdata = new PlayerData(name, document.getElementById('player_data'));
@@ -9,6 +10,7 @@ function refreshData() {
 }
 
 function PlayerData(player, container) {
+    submit_user.setAttribute('disabled', '');
     this.container = container;
     this.api = 'http://darkan.org:5556/api/player/';
     this.player = player;
@@ -92,6 +94,7 @@ function PlayerData(player, container) {
         errorMessage.textContent = message;
         clearChildren(container);
         container.appendChild(errorMessage);
+        submit_user.removeAttribute('disabled');
     }
     
 }
@@ -185,6 +188,7 @@ function Display(data) {
     data.container.appendChild(player_npcKills_container);
     data.container.appendChild(player_count_container);
     addCollapsibles();
+    submit_user.removeAttribute('disabled');
 }
 
 
@@ -209,6 +213,26 @@ function newElement(element, args={}) {
 */
 function formatNumber(n) {
     return n.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+// Function for abbreviating numbers
+/* ex:  1000 > 1k
+        1000000 > 1m
+        1500000 > 1.5m
+*/
+function roundNumber(n, precision) {
+    prec = Math.pow(10, precision);
+    return Math.floor(n*prec)/prec;
+}
+
+function abbreviateNumber(n) {
+    base = Math.floor(Math.log(Math.abs(n))/Math.log(1000));
+    suffix = 'kmbtqQ'[base-1];
+    if (suffix) {
+        return roundNumber(n/Math.pow(1000,base),1)+suffix;
+    } else {
+        return ''+n;
+    }
 }
 
 function formatName(n) {
@@ -321,7 +345,10 @@ function sortData(data, container, sortType) {
         player_data_container.appendChild(player_data_key);
 
         var player_data_value = newElement('span', { className:'player_data_value'});
-        player_data_value.textContent = dataList[i][1];
+        player_data_value.textContent = formatNumber(dataList[i][1])
+        if (dataList[i][1] >= 10000) {
+            player_data_value.textContent += ' (' + abbreviateNumber(dataList[i][1]) + ')';
+        }
         player_data_container.appendChild(player_data_value);
 
         container.appendChild(player_data_container);
