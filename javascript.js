@@ -1,4 +1,5 @@
 pdata = undefined;
+abbreviate = false;
 
 function getData() {
     var name = document.getElementById('username').value.toLowerCase().replace(' ', '_');
@@ -15,6 +16,14 @@ function PlayerData(player, container) {
     this.api = 'http://darkan.org:5556/api/player/';
     this.player = player;
     this.url = this.api + this.player;
+
+    this.info = undefined;
+    this.npcKills = undefined;
+    this.count = undefined;
+
+    // Searches
+    this.curNpcKills = undefined;
+    this.curCount = undefined;
     
     // Timer that checks if all data is loaded
     this.isReadyTimer = undefined;
@@ -36,33 +45,30 @@ function PlayerData(player, container) {
                 pd.loadingError(response.status);
             } else {
                 console.log(response.status);
-                info = undefined;
-                npcKills = undefined;
-                count = undefined;
                 console.log('Player data successfully retrieved.');
                 response.json().then(function(data) {
-                    info = data; 
+                    pd.info = data; 
                     fetch(pd.url + '/npckills', {mode: 'cors'})
                         .then(function(response){
                             response.json().then(function(data) {
-                                npcKills = data;
+                                pd.npcKills = data;
                                 console.log('Npc Kills successfully retrieved')
                             });
                         });
                     fetch(pd.url + '/count', {mode: 'cors'})
                         .then(function(response){
                             response.json().then(function(data) {
-                                count = data;
+                                pd.count = data;
                                 console.log('Count successfully retrieved');
                             });
                         });
                     var tries = 0;    
                     pd.isReadyTimer = setInterval(
                         function() {
-                            if (npcKills !== undefined && count !== undefined) {
+                            if (pd.npcKills !== undefined && pd.count !== undefined) {
                                 clearInterval(pd.isReadyTimer);
                                 console.log('...ready!');
-                                pd.display = new Display({player:pd.player, container:pd.container, info:info, npcKills:npcKills, count:count});
+                                pd.display = new Display({player:pd.player, container:pd.container, info:pd.info, npcKills:pd.npcKills, count:pd.count});
                             } else if (tries >= 200) {
                                 clearInterval(pd.isReadyTimer);
                                 pd.loadingError(999);
@@ -100,7 +106,7 @@ function PlayerData(player, container) {
 }
 
 function Display(data) {
-    this.data = data;
+    //this.data = data;
     
 
     // General Information
@@ -275,6 +281,9 @@ function assembleData(dataList, title) {
     // List's options
     var player_data_content_options = newElement('div');
     // Sort buttons
+    // Move this part to the sort function later, so that it will have the 'new dataList' available to it
+    var player_data_content_options_sort = newElement('div');
+    player_data_content_options.appendChild(player_data_content_options_sort);
     for (var i = 0; i < 4; i++) {
         var sort_options = [ 
                     'A-z',
@@ -287,7 +296,7 @@ function assembleData(dataList, title) {
         player_data_content_sort.onclick = function() {
             sortData(dataList, document.getElementById(title.replace(' ', '_') + '_content'), this.textContent);
         };
-        player_data_content_options.appendChild(player_data_content_sort);
+        player_data_content_options_sort.appendChild(player_data_content_sort);
     }
     player_data_content.appendChild(player_data_content_options);
 
@@ -313,8 +322,6 @@ function valComparator(a, b) {
 }
 
 function sortData(data, container, sortType) {
-    //var keyList = Object.keys(dataList);
-    //var valList = Object.values(dataList);
     var dataList = Object.entries(data);
 
     switch (sortType) {
@@ -346,7 +353,7 @@ function sortData(data, container, sortType) {
 
         var player_data_value = newElement('span', { className:'player_data_value'});
         player_data_value.textContent = formatNumber(dataList[i][1])
-        if (dataList[i][1] >= 10000) {
+        if (dataList[i][1] >= 10000 && abbreviate) {
             player_data_value.textContent += ' (' + abbreviateNumber(dataList[i][1]) + ')';
         }
         player_data_container.appendChild(player_data_value);
