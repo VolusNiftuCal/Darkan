@@ -74,6 +74,7 @@ function PlayerData(player, container) {
         })
         .catch(function(err) {
             console.log('Fetch error', err);
+            pd.loadingError(err);
         });
     
     // Displays errors
@@ -239,28 +240,90 @@ function addCollapsibles() {
 }
 
 function assembleData(dataList, title) {
-        var player_data_main_container = newElement('div', { className:'data_container'});
-        var player_data_title = newElement('button', { className:'collapsible'});
-        player_data_title.textContent = title;
-        player_data_main_container.appendChild(player_data_title);
+    var player_data_main_container = newElement('div', { className:'data_container'});
+    var player_data_title = newElement('button', { className:'collapsible'});
+    player_data_title.textContent = title;
+    player_data_main_container.appendChild(player_data_title);
 
-        player_data_content = newElement('div', { className:'content'});
-        player_data_main_container.appendChild(player_data_content);
+    var player_data_content = newElement('div', { className:'content'});
+    player_data_main_container.appendChild(player_data_content);
 
-        for (data in dataList) {
-            player_data_container = newElement('div', { className:'player_data_cont'});
-
-            player_data_key = newElement('span', { className:'player_data_key'});
-            player_data_key.textContent = data;
-            player_data_container.appendChild(player_data_key);
-
-            player_data_value = newElement('span', { className:'player_data_value'});
-            player_data_value.textContent = dataList[data];
-            player_data_container.appendChild(player_data_value);
-
-            player_data_content.appendChild(player_data_container);
-        }
-        
-        return player_data_main_container;
+    // List's options
+    var player_data_content_options = newElement('div');
+    // Sort buttons
+    for (var i = 0; i < 4; i++) {
+        var sort_options = [ 
+                    'A-z',
+                    'z-A',
+                    '0-9',
+                    '9-0'
+                    ];
+        var player_data_content_sort = newElement('button');
+        player_data_content_sort.textContent = sort_options[i];
+        player_data_content_sort.onclick = function() {
+            sortData(dataList, document.getElementById(title.replace(' ', '_') + '_content'), this.textContent);
+        };
+        player_data_content_options.appendChild(player_data_content_sort);
     }
+    player_data_content.appendChild(player_data_content_options);
+
+    // Information
+    var player_data_content_info = newElement('div', { id: title.replace(' ', '_') + '_content'});
+    player_data_content.appendChild(player_data_content_info);
+
+    sortData(dataList, player_data_content_info);
     
+    return player_data_main_container;
+}
+
+function keyComparator(a, b) {
+    if (a[0] < b[0]) return -1;
+    if (a[0] > b[0]) return 1;
+    return 0;
+}
+
+function valComparator(a, b) {
+    if (a[1] < b[1]) return -1;
+    if (a[1] > b[1]) return 1;
+    return 0;
+}
+
+function sortData(data, container, sortType) {
+    //var keyList = Object.keys(dataList);
+    //var valList = Object.values(dataList);
+    var dataList = Object.entries(data);
+
+    switch (sortType) {
+        case 'A-z':
+            dataList = dataList.sort(keyComparator);
+            break;
+        case 'z-A':
+            dataList = dataList.sort(keyComparator).reverse();
+            break;
+        case '0-9':
+            dataList = dataList.sort(valComparator);
+            break;
+        case '9-0':
+            dataList = dataList.sort(valComparator).reverse();
+            break;
+
+        default:
+            break;
+    }
+
+    clearChildren(container);
+
+    for (var i = 0; i < dataList.length; i++) {
+        var player_data_container = newElement('div', { className:'player_data_cont'});
+
+        var player_data_key = newElement('span', { className:'player_data_key'});
+        player_data_key.textContent = dataList[i][0];
+        player_data_container.appendChild(player_data_key);
+
+        var player_data_value = newElement('span', { className:'player_data_value'});
+        player_data_value.textContent = dataList[i][1];
+        player_data_container.appendChild(player_data_value);
+
+        container.appendChild(player_data_container);
+    }
+}    
