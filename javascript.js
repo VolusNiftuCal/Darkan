@@ -173,7 +173,7 @@ function Display(data) {
     var player_count_container = assembleData(data.count, 'Count');
 
     // Adding the player's name to the title
-    document.title = 'Darkan Achievments - ' + formatName(data.player);
+    document.title = 'Darkan Achievements - ' + formatName(data.player);
     // Clearing the container
     clearChildren(data.container);
 
