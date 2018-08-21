@@ -278,33 +278,26 @@ function assembleData(dataList, title) {
     var player_data_content = newElement('div', { className:'content'});
     player_data_main_container.appendChild(player_data_content);
 
-    // List's options
-    var player_data_content_options = newElement('div');
-    // Sort buttons
-    // Move this part to the sort function later, so that it will have the 'new dataList' available to it
-    var player_data_content_options_sort = newElement('div');
-    player_data_content_options.appendChild(player_data_content_options_sort);
-    for (var i = 0; i < 4; i++) {
-        var sort_options = [ 
-                    'A-z',
-                    'z-A',
-                    '0-9',
-                    '9-0'
-                    ];
-        var player_data_content_sort = newElement('button');
-        player_data_content_sort.textContent = sort_options[i];
-        player_data_content_sort.onclick = function() {
-            sortData(dataList, document.getElementById(title.replace(' ', '_') + '_content'), this.textContent);
-        };
-        player_data_content_options_sort.appendChild(player_data_content_sort);
-    }
-    player_data_content.appendChild(player_data_content_options);
+    // List's search bar
+    var player_data_content_s = newElement('div', { className:'player_data_search'});
+    var player_data_content_s_form = newElement('form');
+    player_data_content_s_form.action = 'javascript:false';
+    player_data_content_s_form.onsubmit = function() {
+        searchData(document.getElementById(title.replace(' ', '_') + '_query').value, Object.entries(dataList), document.getElementById(title.replace(' ', '_') + '_content'));
+    };
+    player_data_content_s.appendChild(player_data_content_s_form);
+    var player_data_content_s_input = newElement('input', { id:title.replace(' ', '_') + '_query'});
+    player_data_content_s_input.type = 'text'
+    player_data_content_s_input.placeholder = 'Search...';
+    player_data_content_s_form.appendChild(player_data_content_s_input);
+    
+    player_data_content.appendChild(player_data_content_s);
 
     // Information
     var player_data_content_info = newElement('div', { id: title.replace(' ', '_') + '_content'});
     player_data_content.appendChild(player_data_content_info);
 
-    sortData(dataList, player_data_content_info);
+    sortData(Object.entries(dataList), player_data_content_info);
     
     return player_data_main_container;
 }
@@ -321,8 +314,8 @@ function valComparator(a, b) {
     return 0;
 }
 
-function sortData(data, container, sortType) {
-    var dataList = Object.entries(data);
+function sortData(dataList, container, sortType) {
+    //var dataList = Object.entries(data);
 
     switch (sortType) {
         case 'A-z':
@@ -344,6 +337,23 @@ function sortData(data, container, sortType) {
 
     clearChildren(container);
 
+    var data_content_sort = newElement('div', { className:'player_data_sort'});
+    for (var i = 0; i < 4; i++) {
+        var sort_options = [ 
+                    'A-z',
+                    'z-A',
+                    '0-9',
+                    '9-0'
+                    ];
+        var player_data_content_sort = newElement('button');
+        player_data_content_sort.textContent = sort_options[i];
+        player_data_content_sort.onclick = function() {
+            sortData(dataList, container, this.textContent);
+        };
+        data_content_sort.appendChild(player_data_content_sort);
+    }
+    container.appendChild(data_content_sort);
+
     for (var i = 0; i < dataList.length; i++) {
         var player_data_container = newElement('div', { className:'player_data_cont'});
 
@@ -360,4 +370,23 @@ function sortData(data, container, sortType) {
 
         container.appendChild(player_data_container);
     }
-}    
+}
+
+function searchData(query, dataList, container) {
+    newList = [];
+    if (query != '') {
+        for (var i=0; i < dataList.length; i++) {
+            if (dataList[i][0].toLowerCase().indexOf(query.toLowerCase()) !== -1) {
+                newList.push(dataList[i]);
+            }
+        }
+    } else {
+        newList = dataList;
+    }
+
+    if (newList.length === 0) {
+        newList.push(['Query not found', query]);
+    }
+
+    sortData(newList, container);
+}
