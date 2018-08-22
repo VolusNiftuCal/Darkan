@@ -28,7 +28,7 @@
     display: none;
     overflow: hidden;
     background-color: #222222; /*#f1f1f1*/
-    border-radius: 0px 0px 5px 5px
+    border-radius: 5px;
 }
 .player_data_search {
     margin: auto;
