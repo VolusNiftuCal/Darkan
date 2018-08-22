@@ -20,17 +20,13 @@ function PlayerData(player, container) {
     this.info = undefined;
     this.npcKills = undefined;
     this.count = undefined;
-
-    // Searches
-    this.curNpcKills = undefined;
-    this.curCount = undefined;
     
     // Timer that checks if all data is loaded
     this.isReadyTimer = undefined;
     
     // Setting up a loading screen while the process runs
     clearChildren(container)
-    this.loadingScreen = newElement('span', { id:'loading_screen' });
+    this.loadingScreen = newElement('div', { id:'loading_screen' });
     this.loadingScreen.textContent = 'Loading...';
     container.appendChild(this.loadingScreen);
    
@@ -87,7 +83,7 @@ function PlayerData(player, container) {
     
     // Displays errors
     this.loadingError = function(status) {
-        var message = 'Something went wrong. ¯\\_(?)_/¯';
+        var message = 'Something went wrong. Â¯\\_(?)_/Â¯';
         if (status === 404) {
             message = 'Player not found.';
         } else 
@@ -179,13 +175,13 @@ function Display(data) {
     var player_count_container = assembleData(data.count, 'Count');
 
     // Adding the player's name to the title
-    document.title = 'Darkan Achievements - ' + formatName(data.player);
+    document.title = 'Darkan \u007C Achievements - ' + formatName(data.player);
     // Clearing the container
     clearChildren(data.container);
 
     // Refresh data button
-    var refresh_button = newElement('button', {id:'refresh_button'});
-    refresh_button.textContent = 'Refresh Data';
+    var refresh_button = newElement('button', {id:'refresh_button', className:'button'});
+    refresh_button.textContent = '\u27F3';
     refresh_button.onclick = function() { refreshData() };
     data.container.appendChild(refresh_button);
 
@@ -287,8 +283,9 @@ function assembleData(dataList, title) {
     };
     player_data_content_s.appendChild(player_data_content_s_form);
     var player_data_content_s_input = newElement('input', { id:title.replace(' ', '_') + '_query'});
+    player_data_content_s_input.autocomplete = 'off';
     player_data_content_s_input.type = 'text'
-    player_data_content_s_input.placeholder = 'Search...';
+    player_data_content_s_input.placeholder = 'Search';
     player_data_content_s_form.appendChild(player_data_content_s_input);
     
     player_data_content.appendChild(player_data_content_s);
@@ -345,7 +342,7 @@ function sortData(dataList, container, sortType) {
                     '0-9',
                     '9-0'
                     ];
-        var player_data_content_sort = newElement('button');
+        var player_data_content_sort = newElement('button', { className:'button sort_button'});
         player_data_content_sort.textContent = sort_options[i];
         player_data_content_sort.onclick = function() {
             sortData(dataList, container, this.textContent);

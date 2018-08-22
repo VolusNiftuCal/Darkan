@@ -11,11 +11,15 @@
     font-size: 25px;
     line-height: 25px;
     color: white;
+    border-radius: 5px;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapsible:hover {
     background-color: #080808; /*#ccc*/
+}
+.active {
+    border-radius: 5px 5px 0px 0px;
 }
 
 /* Style the collapsible content. Note: hidden by default */
@@ -24,14 +28,28 @@
     display: none;
     overflow: hidden;
     background-color: #222222; /*#f1f1f1*/
+    border-radius: 0px 0px 5px 5px
+}
+.player_data_search {
+    margin: auto;
+    text-align: center;
 }
 
-.content button, .player_data_search {
-    margin-left: 2px;
+.player_data_search form input {
+    text-align: center;
+}
+
+.content button:first-child {
+    margin-left: 1px;
+}
+
+.content button:not(:first-child) {
+    margin-left: 5px;
 }
 
 .collapsible:after {
     content: '\02795'; /* Unicode character for "plus" sign (+) */
+    line-height: 25px;
     font-size: 25px;
     color: white;
     float: right;
@@ -48,6 +66,7 @@
 
 body {
     background-color: #202020;
+    height: 100%;
 }
 
 #player_total_level:before {
@@ -59,7 +78,7 @@ body {
     display: block;
     height: 22px;
     padding: 2px;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .player_skill, .player_xp {
@@ -126,12 +145,98 @@ body {
 
 #refresh_button {
     margin-top: 5px;
+    padding: 0px;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
-.player_data_search, .player_data_sort {
+.button {
+    background-color: #181818;
+    color: white;
+    border: none;
+    text-align: center;
+    border-radius: 2px;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: #080808;
+}
+
+.button:active {
+    outline: black;
+    background-color: #181818;
+}
+
+.player_data_search {
     margin-bottom: 5px;
 }
 
+.player_data_sort {
+    width: 140px;
+    margin: auto;
+}
+
 #loading_screen {
+    position: relative;
     color: #888;
+    width: 100px;
+    margin: auto;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.main_body {
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 25px;
+    width: 800px;
+    height: 100%;
+    box-shadow: 0 0px 5px rgba(0,0,0,.9);
+    border-radius: 2px;
+}
+
+#user_input {
+    margin: auto;
+    width: 200px;
+}
+
+#username {
+    width: 196px;
+    text-align: center;
+}
+
+#submit_user {
+    width: 100px;
+    margin-top: 5px;
+    margin-left: 50px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#submit_user:disabled {
+    background-color: grey;
+    cursor: default;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+}
+
+#player_data {
+    width: 800px;
+    margin: auto;
+}
+
+.sort_button {
+    padding: 5px;
+    width: 30px;
+    height: 25px;
+    text-align: center;
 }
