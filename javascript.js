@@ -131,22 +131,38 @@ function Display(data) {
     player_name_cont.appendChild(player_name);
     player_info_container.appendChild(player_name_cont);
 
-    player_info_content = newElement('div', {className:'content'});
+    var player_info_content = newElement('div', {className:'content'});
     player_info_container.appendChild(player_info_content);
 
     // Stats
+    // Account type
+    var ACC_TYPES = [ 'Normal', 'Difficult', 'Legendary' ];
+    var ACC_TYPES_COL = [ 'WHITE', 'rgb(0, 153, 51)', 'rgb(255, 0, 0)'];
+    var player_acc_type_cont = newElement('div', {id:'player_acc_type', className:'player_skill_container'});
+    var player_acc_type = newElement('span');
+    player_acc_type.textContent = ACC_TYPES[data.info.accountType];
+    player_acc_type.style.color = ACC_TYPES_COL[data.info.accountType];
+    player_acc_type_cont.appendChild(player_acc_type);
+    if (data.info.ironman) {
+        var player_acc_ironman = newElement('span');
+        player_acc_ironman.textContent = ' Ironman';
+        player_acc_ironman.style.color = 'rgb(255, 0, 0)';
+        player_acc_type_cont.appendChild(player_acc_ironman);
+    }
+    player_info_content.appendChild(player_acc_type_cont);
+
     // Total Level
-    player_total_cont = newElement('div', {className:'player_skill_container'});
+    var player_total_cont = newElement('div', {className:'player_skill_container'});
     // Icon
-    player_total_icon = newElement('img', {className:'player_skill_icon'});
+    var player_total_icon = newElement('img', {className:'player_skill_icon'});
     player_total_icon.src = './assets/stats/Overall-icon.png';
     player_total_cont.appendChild(player_total_icon);
     // Level
-    player_total_level = newElement('div', {className:'player_skill'});
+    var player_total_level = newElement('div', {className:'player_skill'});
     player_total_level.textContent = formatNumber(data.info.stats.totalLevel);
     player_total_cont.appendChild(player_total_level);
     // XP
-    player_total_xp = newElement('div', {className:'player_xp'});
+    var player_total_xp = newElement('div', {className:'player_xp'});
     player_total_xp.textContent = formatNumber(data.info.stats.totalXp);
     player_total_cont.appendChild(player_total_xp);
     // Append
@@ -159,10 +175,10 @@ function Display(data) {
         var player_skill_icon = newElement('div', {className:'player_skill_icon'});
         player_skill_icon.style.backgroundImage = 'url(./assets/stats/' +skillList[i]+ '-icon.png)';
         player_skill_cont.appendChild(player_skill_icon);
-        player_skill_level = newElement('div', {className:'player_skill'});
+        var player_skill_level = newElement('div', {className:'player_skill'});
         player_skill_level.textContent = formatNumber(data.info.stats.skills[i].level);
         player_skill_cont.appendChild(player_skill_level);
-        player_skill_xp = newElement('div', {className:'player_xp'});
+        var player_skill_xp = newElement('div', {className:'player_xp'});
         player_skill_xp.textContent = formatNumber(data.info.stats.skills[i].xp);
         player_skill_cont.appendChild(player_skill_xp);
         player_info_content.appendChild(player_skill_cont);
