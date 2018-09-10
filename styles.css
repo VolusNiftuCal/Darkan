@@ -173,10 +173,11 @@ noscript div a:visited {
     line-height: 30px;
     border-radius: 5px;
     font-weight: bold;
+    background-color: #181818;
 }
 
 .button {
-    background-color: #181818;
+    background-color: #424242;
     color: white;
     border: none;
     text-align: center;
@@ -189,8 +190,8 @@ noscript div a:visited {
 }
 
 .button:active {
-    outline: black;
-    background-color: #181818;
+    outline: rgb(51, 122, 183);
+    background-color: rgb(51, 122, 183);
 }
 
 .player_data_search {
