@@ -2,7 +2,7 @@ pdata = undefined;
 abbreviate = false;
 
 function getData() {
-    var name = document.getElementById('username').value.toLowerCase().replace(' ', '_');
+    var name = document.getElementById('username').value.toLowerCase().replace(/ /g, '_');
     pdata = new PlayerData(name, document.getElementById('player_data'));
 }
 
