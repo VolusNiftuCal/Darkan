@@ -90,7 +90,7 @@ function PlayerData(player, container) {
         if (status === 999) {
             message = 'Took too long to retrieve information. Please try again.'
         } else {
-            message = 'Something went wrong while retrieving player data. Status Code: ' + status;
+            message = 'Something went wrong while retrieving player data: [ERROR: ' + status + ']';
         }
         var errorMessage = newElement('div', { id:'error_message'});
         errorMessage.textContent = message;
