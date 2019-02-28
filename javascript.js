@@ -13,7 +13,7 @@ function refreshData() {
 function PlayerData(player, container) {
     submit_user.setAttribute('disabled', '');
     this.container = container;
-    this.api = 'http://darkan.org:5556/api/player/';
+    this.api = 'https://darkan.org/api/player/';
     this.player = player;
     this.url = this.api + this.player;
 
